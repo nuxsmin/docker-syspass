@@ -1,0 +1,25 @@
+version: '2'
+services:
+  app:
+    container_name: syspass-app
+    image: nuxsmin/docker-syspass:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - db
+    volumes:
+      - /var/www/html/sysPass/config
+      - /var/www/html/sysPass/backup
+  db:
+    container_name: syspass-db
+    restart: always
+    image: nuxsmin/docker-syspass:mysql
+    ports:
+      - "127.0.0.1:3306:3306"
+    environment:
+      - DB_REMOTE_HOST=syspass-app.syspass_default
+      - DB_REMOTE_ROOT_PASS=syspass
+    volumes:
+      - /var/lib/mysql
