@@ -10,7 +10,7 @@ LABEL from=github version=devel
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 RUN apt-get update \
-	&& apt-get -y install \
+	&& apt-get -y install locales \
 	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-curl php5-gd php5-json php5-ldap php5-mcrypt wget unzip \
 	php5-xdebug \
 	&& apt-get clean \
