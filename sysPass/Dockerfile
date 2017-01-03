@@ -10,7 +10,7 @@ LABEL from=github version=stable-master
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 RUN apt-get update \
-	&& apt-get -y install \
+	&& apt-get -y install locales \
 	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-curl php5-gd php5-json php5-ldap php5-mcrypt wget unzip \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/*
@@ -18,9 +18,6 @@ RUN apt-get update \
 WORKDIR /var/www/html
 
 LABEL version=1.2.0.21
-
-# Upgrade packages on every build
-RUN apt-get update && apt-get -y upgrade
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
@@ -39,6 +36,6 @@ RUN wget https://github.com/nuxsmin/sysPass/archive/master.zip \
 
 EXPOSE 80 443
 
-VOLUME /etc/apache2/sites-available/
+VOLUME ["/var/www/html/sysPass/config", "/var/www/html/sysPass/backup"]
 
 ENTRYPOINT ["/usr/local/sbin/entrypoint.sh"]
