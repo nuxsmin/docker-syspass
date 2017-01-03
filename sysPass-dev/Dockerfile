@@ -20,9 +20,6 @@ WORKDIR /var/www/html
 
 LABEL version=1.3.0.16122901
 
-# Upgrade packages on every build
-RUN apt-get update && apt-get -y upgrade
-
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
 
