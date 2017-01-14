@@ -16,6 +16,8 @@ setup_locales() {
     echo "ca_ES.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "fr_FR.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "ru_RU.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "po_PO.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "nl_NL.UTF-8 UTF-8" >> $LOCALE_GEN
    
     echo 'LANG="en_US.UTF-8"' > /etc/default/locale
 
