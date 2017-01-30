@@ -12,13 +12,13 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 RUN apt-get update \
 	&& apt-get -y install locales \
 	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-curl php5-gd php5-json php5-ldap php5-mcrypt wget unzip \
-	php5-xdebug \
+	php5-xdebug vim \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 
-LABEL version=2.0.0.17012301
+LABEL version=2.0.0.17013001
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
