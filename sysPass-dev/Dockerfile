@@ -1,6 +1,6 @@
 FROM debian:jessie
 MAINTAINER nuxsmin nuxsmin@syspass.org
-LABEL from=github version=devel
+LABEL from=github version=devel php=5.6
 
 # Usage:
 # docker run -d --name=sysPass-dev -p 80:80 -p 443:443 nuxsmin/docker-syspass:devel
@@ -11,14 +11,14 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 
 RUN apt-get update \
 	&& apt-get -y install locales \
-	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-curl php5-gd php5-json php5-ldap php5-mcrypt wget unzip \
-	php5-xdebug vim \
+	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-curl php5-gd \
+	php5-json php5-ldap php5-mcrypt wget unzip php5-xdebug vim \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 
-LABEL version=2.0.0.17013001
+LABEL version=2.0.0.17020703
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
