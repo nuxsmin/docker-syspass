@@ -11,7 +11,7 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 
 RUN apt-get update \
 	&& apt-get -y install locales \
-	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-curl php5-gd \
+	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-gd \
 	php5-json php5-ldap php5-mcrypt wget unzip php5-xdebug vim \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/*
