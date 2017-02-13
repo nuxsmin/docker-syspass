@@ -25,6 +25,8 @@ setup_locales() {
  fi
 }
 
+[[ -e "/var/run/apache2/apache2.pid" ]] && rm -rf "/var/run/apache2/apache2.pid"
+
 trap "echo 'Stopping Apache2 ...' && /usr/sbin/apachectl stop" HUP INT QUIT KILL TERM
 
 setup_locales

@@ -11,26 +11,30 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 
 RUN apt-get update \
 	&& apt-get -y install locales \
-	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-curl php5-gd php5-json php5-ldap php5-mcrypt wget unzip \
+	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-gd \
+	php5-json php5-ldap php5-mcrypt wget unzip vim \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 
-LABEL version=1.2.0.21
+# Mininal Apache config using provided .conf files
+COPY 000-default.conf default-ssl.conf /etc/apache2/sites-available/
 
-# Mininal HTTP-only Apache config
-COPY 000-default.conf /etc/apache2/sites-available/
-
-# Cutom entrypoint to run Apache on foreground
+# Custom entrypoint to run Apache on foreground
 COPY entrypoint.sh /usr/local/sbin/
-RUN chmod 755 /usr/local/sbin/entrypoint.sh
 
-# Download and install the latest sysPass release from GitHub
+# Enable SSL site and set entrypoint permissions
+RUN a2enmod ssl \
+	&& a2ensite default-ssl \
+	&& chmod 755 /usr/local/sbin/entrypoint.sh
+
+LABEL version=2.0.0.17021302
+
+# Download and install the latest sysPass stable release from GitHub
 RUN wget https://github.com/nuxsmin/sysPass/archive/master.zip \
 	&& unzip master.zip \
 	&& mv sysPass-master sysPass \
-	&& mkdir sysPass/backup \
 	&& chmod 750 sysPass/config sysPass/backup \
 	&& chown www-data -R sysPass/
 
