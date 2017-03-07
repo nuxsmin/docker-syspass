@@ -28,7 +28,7 @@ RUN apt-get update \
 
 WORKDIR /var/www/html
 
-LABEL version=2.1.0.17022601
+LABEL version=2.1.1.17030601
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
@@ -43,7 +43,6 @@ RUN chmod 755 /usr/local/sbin/entrypoint.sh
 RUN pwd && wget https://github.com/nuxsmin/sysPass/archive/devel.zip \
 	&& unzip devel.zip \
 	&& mv sysPass-devel sysPass \
-	&& mkdir sysPass/backup \
 	&& chmod 750 sysPass/config sysPass/backup \
 	&& chown www-data -R sysPass/
 
