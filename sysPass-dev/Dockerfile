@@ -18,7 +18,7 @@ RUN apt-get update \
 
 WORKDIR /var/www/html
 
-LABEL version=2.1.2.17031401
+LABEL version=2.1.7.17042101
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
