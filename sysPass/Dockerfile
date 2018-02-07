@@ -29,7 +29,7 @@ RUN a2enmod ssl \
 	&& a2ensite default-ssl \
 	&& chmod 755 /usr/local/sbin/entrypoint.sh
 
-LABEL version=2.1.7.17042101
+LABEL version=2.1.11.17061503
 
 # Download and install the latest sysPass stable release from GitHub
 RUN wget https://github.com/nuxsmin/sysPass/archive/master.zip \
