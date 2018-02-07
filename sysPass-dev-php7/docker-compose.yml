@@ -1,8 +1,8 @@
 version: '2'
 services:
   app:
-    container_name: syspass-app-devel
-    image: nuxsmin/docker-syspass:devel
+    container_name: syspass-app
+    image: nuxsmin/docker-syspass:dev-php7
     restart: always
     ports:
       - "80"
@@ -10,16 +10,15 @@ services:
     links:
       - db
     volumes:
-      - /var/log/apache2
-      - /var/www/html/sysPass
+      - /var/www/html/sysPass/config
+      - /var/www/html/sysPass/backup
   db:
     container_name: syspass-db
     restart: always
-    image: nuxsmin/docker-syspass:mysql
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=syspass
     ports:
       - "3306"
-    environment:
-      - DB_REMOTE_HOST=syspass-app-devel.syspassdev_default
-      - DB_REMOTE_ROOT_PASS=syspass
     volumes:
       - /var/lib/mysql
