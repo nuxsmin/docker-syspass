@@ -9,11 +9,11 @@ setup_app () {
     if [ ! -e "./sysPass/index.php" ]; then
         echo -e "\nUnpacking sysPass ..."
 
-        unzip ${SYSPASS_BRANCH}.zip \
-        && mv sysPass-${SYSPASS_BRANCH}/* sysPass \
-        && chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R sysPass/ \
-        && chmod g+w -R sysPass/ \
-        && chmod 750 sysPass/config sysPass/backup
+        unzip ${SYSPASS_BRANCH}.zip
+        mv sysPass-${SYSPASS_BRANCH}/* sysPass
+        chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R sysPass/
+        chmod g+w -R sysPass/
+        chmod 750 sysPass/config sysPass/backup
     fi
 }
 
