@@ -9,18 +9,23 @@ setup_app () {
     if [ ! -e "./sysPass/index.php" ]; then
         echo -e "\nUnpacking sysPass ..."
 
-        unzip ${SYSPASS_BRANCH}.zip \
-        && mv sysPass-${SYSPASS_BRANCH}/* sysPass \
-        && chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R sysPass/ \
-        && chmod g+w -R sysPass/ \
-        && chmod 750 sysPass/config sysPass/backup
+        unzip ${SYSPASS_BRANCH}.zip
+        mv sysPass-${SYSPASS_BRANCH}/* sysPass
+        chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R sysPass/
+        chmod g+w -R sysPass/
+        chmod 750 sysPass/config sysPass/backup
     fi
 }
 
 setup_composer () {
-    echo -e "\nSetting up composer ..."
-
     pushd ./sysPass
+
+    if [ -e "composer.lock" ]; then
+        echo -e "\nComposer already set up."
+        return 0
+    fi
+
+    echo -e "\nSetting up composer ..."
 
     if [ ! -e "./sysPass/composer.phar" ]; then
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -29,7 +34,9 @@ setup_composer () {
         php -r "unlink('composer-setup.php');"
     fi
 
-    php composer.phar self-update && php composer.phar install
+    php composer.phar self-update
+
+    [[ $? -eq 0 && -e "composer.json" ]] && php composer.phar install
 
     popd
 }
@@ -76,12 +83,26 @@ setup_apache
 setup_app
 setup_composer
 
-if [ "$1" == "apache" ]; then
-    # Apache gets grumpy about PID files pre-existing
-    rm -f ${APACHE_PID_FILE}
+case "$1" in
+    "apache")
+        echo -e "Starting Apache ..\n"
 
-    exec /usr/sbin/apache2ctl -DFOREGROUND
-fi
+        # Apache gets grumpy about PID files pre-existing
+        rm -f ${APACHE_PID_FILE}
 
-echo -e "Starting $@ ...\n"
-exec gosu ${SYSPASS_UID} "$@"
+        exec /usr/sbin/apache2ctl -DFOREGROUND
+        ;;
+    "update")
+        if [ -e "./composer.phar" -a -e "./composer.lock" ]; then
+            echo -e "Updating composer ..\n"
+
+            gosu ${SYSPASS_UID} php composer.phar update
+        else
+            echo -e "ERROR: Composer not set up"
+        fi
+        ;;
+    *)
+        echo -e "Starting $@ ...\n"
+        exec gosu ${SYSPASS_UID} "$@"
+        ;;
+esac
