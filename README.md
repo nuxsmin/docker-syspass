@@ -1,5 +1,5 @@
 # 3.0-beta release
----
+
 **sysPass** is a powerful GPLv3 web password manager for business and personal use. See more at http://syspass.org
 
 These images are based on Debian 9 (Stretch), Apache 2.4 webserver with PHP 7.0 module and MariaDB 10.1
