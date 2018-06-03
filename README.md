@@ -1,4 +1,4 @@
-# ** 3.0-beta release **
+# 3.0-beta release
 ---
 **sysPass** is a powerful GPLv3 web password manager for business and personal use. See more at http://syspass.org
 
