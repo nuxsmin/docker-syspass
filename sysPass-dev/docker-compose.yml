@@ -10,8 +10,8 @@ services:
     links:
       - db
     volumes:
-      - /var/www/html/sysPass/config
-      - /var/www/html/sysPass/backup
+      - /var/www/html/sysPass/app/config
+      - /var/www/html/sysPass/app/backup
   db:
     container_name: syspass-db
     restart: always
