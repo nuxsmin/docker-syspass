@@ -32,9 +32,6 @@ LABEL build=2018060301
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
 
-# Xdebug module config
-COPY 20-xdebug.ini /etc/php/7.0/apache2/conf.d/20-xdebug.ini
-
 # Custom entrypoint
 COPY entrypoint.sh /usr/local/sbin/
 
