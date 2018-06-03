@@ -2,7 +2,7 @@ version: '2'
 services:
   app:
     container_name: syspass-app
-    image: nuxsmin/docker-syspass:devel-php7
+    image: nuxsmin/docker-syspass:3.0-beta
     restart: always
     ports:
       - "80"
@@ -10,8 +10,8 @@ services:
     links:
       - db
     volumes:
-      - /var/www/html/sysPass/config
-      - /var/www/html/sysPass/backup
+      - syspass-config:/var/www/html/sysPass/config
+      - syspass-backup:/var/www/html/sysPass/backup
   db:
     container_name: syspass-db
     restart: always
@@ -21,4 +21,9 @@ services:
     ports:
       - "3306"
     volumes:
-      - /var/lib/mysql
+      - syspass-db:/var/lib/mysql
+
+volumes:
+  syspass-config: {}
+  syspass-backup: {}
+  syspass-db: {}
