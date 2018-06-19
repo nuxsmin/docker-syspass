@@ -1,6 +1,5 @@
 FROM debian:stretch
-MAINTAINER nuxsmin nuxsmin@syspass.org
-LABEL from=github version=master php=7.0
+LABEL maintainer=nuxsmin@syspass.org from=github version=devel php=7.0
 
 # Usage:
 # docker run -d --name=sysPass-dev -p 80:80 -p 443:443 nuxsmin/docker-syspass:devel
@@ -23,12 +22,12 @@ ENV APACHE_RUN_USER="www-data" \
 	APACHE_LOG_DIR="/var/log/apache2" \
 	APACHE_LOCK_DIR="/var/lock/apache2" \
 	APACHE_PID_FILE="/var/run/apache2.pid" \
-	SYSPASS_BRANCH="master" \
+	SYSPASS_BRANCH="devel" \
 	SYSPASS_UID=9001
 
 WORKDIR /var/www/html
 
-LABEL build=2018020701
+LABEL build=18061901
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/

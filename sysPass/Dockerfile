@@ -1,20 +1,25 @@
 FROM debian:jessie
-MAINTAINER nuxsmin nuxsmin@syspass.org
-LABEL from=github version=stable-master
+LABEL maintainer=nuxsmin@syspass.org from=github version=stable-master
 
 # Usage:
 # docker run -d --name=sysPass -p 80:80 -p 443:443 nuxsmin/docker-syspass
 # webroot: /var/www/html/
 # Apache2 config: /etc/apache2/
 
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-
 RUN apt-get update \
-	&& apt-get -y install locales \
+	&& DEBIAN_FRONTEND=noninteractive apt-get -y install locales \
 	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-gd \
 	php5-json php5-ldap php5-mcrypt wget unzip vim \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/*
+
+ENV APACHE_RUN_USER="www-data" \
+		APACHE_RUN_GROUP="www-data" \
+		APACHE_LOG_DIR="/var/log/apache2" \
+		APACHE_LOCK_DIR="/var/lock/apache2" \
+		APACHE_PID_FILE="/var/run/apache2.pid" \
+		SYSPASS_BRANCH="master" \
+		SYSPASS_UID=9001
 
 WORKDIR /var/www/html
 
@@ -29,17 +34,15 @@ RUN a2enmod ssl \
 	&& a2ensite default-ssl \
 	&& chmod 755 /usr/local/sbin/entrypoint.sh
 
-LABEL version=2.1.11.17061503
+LABEL version=2.1.16.18061901
 
 # Download and install the latest sysPass stable release from GitHub
-RUN wget https://github.com/nuxsmin/sysPass/archive/master.zip \
-	&& unzip master.zip \
-	&& mv sysPass-master sysPass \
-	&& chmod 750 sysPass/config sysPass/backup \
-	&& chown www-data -R sysPass/
+RUN wget https://github.com/nuxsmin/sysPass/archive/${SYSPASS_BRANCH}.zip
 
 EXPOSE 80 443
 
 VOLUME ["/var/www/html/sysPass/config", "/var/www/html/sysPass/backup"]
 
 ENTRYPOINT ["/usr/local/sbin/entrypoint.sh"]
+
+CMD ["apache"]
