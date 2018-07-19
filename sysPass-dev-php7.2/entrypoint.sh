@@ -30,6 +30,7 @@ setup_composer () {
 
   if [ -e "composer.lock" -a -d "vendor" ]; then
     echo -e "${COLOR_YELLOW}setup_composer: Composer already set up${COLOR_NC}"
+    popd
     return 0
   fi
 
@@ -58,22 +59,26 @@ setup_locales() {
     echo -e "\n### sysPass locales" >> $LOCALE_GEN
     echo "es_ES.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "en_US.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "en_GB.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "de_DE.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "ca_ES.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "fr_FR.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "ru_RU.UTF-8 UTF-8" >> $LOCALE_GEN
-    echo "po_PO.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "pl_PL.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "nl_NL.UTF-8 UTF-8" >> $LOCALE_GEN
 
     echo 'LANG="en_US.UTF-8"' > /etc/default/locale
 
     dpkg-reconfigure --frontend=noninteractive locales
+
     update-locale LANG=en_US.UTF-8
 
-    LANG=en_US.UTF-8
+    export LANG=en_US.UTF-8
 
     echo "1" > .setup
- fi
+  else
+    echo -e "${COLOR_YELLOW}setup_locales: Locales already set up${COLOR_NC}"
+  fi
 }
 
 setup_apache () {
