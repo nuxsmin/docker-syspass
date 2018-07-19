@@ -34,6 +34,7 @@ setup_composer () {
     echo -e "${COLOR_YELLOW}setup_composer: Updating${COLOR_NC}"
 
     run_composer update
+    popd
     return 0
   fi
 
@@ -62,6 +63,7 @@ setup_locales() {
     echo -e "\n### sysPass locales" >> $LOCALE_GEN
     echo "es_ES.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "en_US.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "en_GB.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "de_DE.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "ca_ES.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "fr_FR.UTF-8 UTF-8" >> $LOCALE_GEN
@@ -72,12 +74,15 @@ setup_locales() {
     echo 'LANG="en_US.UTF-8"' > /etc/default/locale
 
     dpkg-reconfigure --frontend=noninteractive locales
+
     update-locale LANG=en_US.UTF-8
 
-    LANG=en_US.UTF-8
+    export LANG=en_US.UTF-8
 
     echo "1" > .setup
- fi
+  else
+    echo -e "${COLOR_YELLOW}setup_locales: Locales already set up${COLOR_NC}"
+  fi
 }
 
 setup_apache () {
