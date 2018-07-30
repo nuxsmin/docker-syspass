@@ -88,6 +88,8 @@ setup_apache () {
 }
 
 run_composer () {
+  pushd ./sysPass
+
   if [ -e "./composer.phar" -a -e "./composer.lock" ]; then
     echo -e "${COLOR_YELLOW}run_composer: Running composer${COLOR_NC}"
 
@@ -95,6 +97,8 @@ run_composer () {
   else
     echo -e "${COLOR_RED}run_composer: Error, composer not set up${COLOR_NC}"
   fi
+
+  popd
 }
 
 echo -e "${COLOR_YELLOW}entrypoint: Starting with UID : ${SYSPASS_UID}${COLOR_NC}"

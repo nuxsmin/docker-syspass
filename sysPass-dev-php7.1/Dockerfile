@@ -1,8 +1,8 @@
-FROM php:7.2-apache-stretch
-LABEL maintainer=nuxsmin@syspass.org version=3.0-beta php=7.2 environment=debug
+FROM php:7.1-apache-stretch
+LABEL maintainer=nuxsmin@syspass.org version=3.0-beta php=7.1 environment=debug
 
 # Usage:
-# docker run -d --name=sysPass-beta -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0-beta-php7.2
+# docker run -d --name=sysPass-beta -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0-beta-php7.1
 # webroot: /var/www/html/
 # Apache2 config: /etc/apache2/
 
