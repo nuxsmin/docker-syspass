@@ -7,12 +7,23 @@ LABEL maintainer=nuxsmin@syspass.org version=3.0-beta php=7.2 environment=debug
 # Apache2 config: /etc/apache2/
 
 RUN apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive \
-	&& apt-get -y install locales wget unzip git gosu libicu-dev libldb-dev libldap2-dev \
+	&& apt-get install -y \
+    locales \
+    wget \
+    unzip \
+    git \
+    gosu \
+    libicu-dev \
+    libldb-dev \
+    libldap2-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
-	&& pecl install xdebug \
-	&& docker-php-ext-install -j$(nproc) ldap intl gettext pdo_mysql \
+	&& pecl install xdebug-2.6.0 \
+  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+	&& docker-php-ext-install -j$(nproc) ldap intl gettext pdo_mysql opcache gd \
 	&& docker-php-ext-enable ldap xdebug intl pdo_mysql
 
 ENV SYSPASS_BRANCH="devel-3.0" \
@@ -20,7 +31,7 @@ ENV SYSPASS_BRANCH="devel-3.0" \
 
 WORKDIR /var/www/html
 
-LABEL build=2018073001
+LABEL build=2018073101
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
