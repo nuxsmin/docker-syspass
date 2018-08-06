@@ -31,7 +31,7 @@ ENV SYSPASS_BRANCH="devel-3.0" \
 
 WORKDIR /var/www/html
 
-LABEL build=2018073101
+LABEL build=18080601
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
