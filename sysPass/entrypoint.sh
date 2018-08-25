@@ -9,13 +9,16 @@ XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST:-"172.17.0.1"}
 XDEBUG_IDE_KEY=${XDEBUG_IDE_KEY:-"ide"}
 
 setup_app () {
-  [[ ! -d "./sysPass" ]] && mkdir sysPass
-
   if [ ! -e "./sysPass/index.php" ]; then
     echo -e "${COLOR_YELLOW}setup_app: Unpacking sysPass${COLOR_NC}"
 
     unzip ${SYSPASS_BRANCH}.zip
-    mv sysPass-${SYSPASS_BRANCH}/* sysPass
+
+    if [ ! -d "./sysPass" ]; then
+      mv -f sysPass-${SYSPASS_BRANCH} sysPass
+    else
+      cp -a sysPass-${SYSPASS_BRANCH}/* sysPass/
+    fi
 
     echo -e "${COLOR_YELLOW}setup_app: Setting up permissions${COLOR_NC}"
 

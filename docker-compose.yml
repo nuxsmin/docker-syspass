@@ -10,12 +10,12 @@ services:
     links:
       - db
     volumes:
-      - syspass-config:/var/www/html/sysPass/config
-      - syspass-backup:/var/www/html/sysPass/backup
+      - syspass-config:/var/www/html/sysPass/app/config
+      - syspass-backup:/var/www/html/sysPass/app/backup
   db:
     container_name: syspass-db
     restart: always
-    image: mariadb
+    image: mariadb:10.2
     environment:
       - MYSQL_ROOT_PASSWORD=syspass
     ports:
