@@ -39,7 +39,8 @@ spec:
         app: syspass
     spec:
       containers:
-      - image: nuxsmin/docker-syspass
+      - name: syspath
+        image: nuxsmin/docker-syspass
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: "/var/www/html/sysPass/config"
