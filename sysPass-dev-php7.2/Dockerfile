@@ -26,7 +26,9 @@ RUN apt-get update \
 	&& docker-php-ext-install -j$(nproc) ldap intl gettext pdo_mysql opcache gd \
 	&& docker-php-ext-enable ldap xdebug intl pdo_mysql
 
-ENV SYSPASS_BRANCH="devel-3.0" \
+ENV APACHE_RUN_USER="www-data" \
+	APACHE_RUN_GROUP="www-data" \
+  SYSPASS_BRANCH="devel-3.0" \
 	SYSPASS_UID=9001
 
 WORKDIR /var/www/html
