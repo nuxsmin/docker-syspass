@@ -40,10 +40,18 @@ setup_composer () {
   echo -e "${COLOR_YELLOW}setup_composer: Setting up composer${COLOR_NC}"
 
   if [ ! -e "composer.phar" ]; then
+    EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
     gosu ${SYSPASS_UID} php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    gosu ${SYSPASS_UID} php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-    gosu ${SYSPASS_UID} php composer-setup.php
-    gosu ${SYSPASS_UID} php -r "unlink('composer-setup.php');"
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")"
+
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
+        >&2 echo 'ERROR: Invalid installer signature'
+        gosu ${SYSPASS_UID} rm -f composer-setup.php
+        exit 1
+    fi
+
+    gosu ${SYSPASS_UID} php composer-setup.php --quiet
+    gosu ${SYSPASS_UID} rm -f composer-setup.php
   fi
 
   gosu ${SYSPASS_UID} php composer.phar self-update
