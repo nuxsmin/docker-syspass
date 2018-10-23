@@ -27,7 +27,7 @@ ENV APACHE_RUN_USER="www-data" \
 
 WORKDIR /var/www/html
 
-LABEL build=18101601
+LABEL build=18102201
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
