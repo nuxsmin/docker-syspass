@@ -8,32 +8,40 @@ COLOR_GREEN='\033[0;32m'
 XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST:-"172.17.0.1"}
 XDEBUG_IDE_KEY=${XDEBUG_IDE_KEY:-"ide"}
 
+SYSPASS_DIR="/var/www/html/sysPass"
+
 setup_app () {
-  if [ ! -e "./sysPass/index.php" ]; then
+  if [ ! -e "${SYSPASS_DIR}/index.php" ]; then
     echo -e "${COLOR_YELLOW}setup_app: Unpacking sysPass${COLOR_NC}"
 
     unzip ${SYSPASS_BRANCH}.zip
 
-    if [ ! -d "./sysPass" ]; then
-      mv -f sysPass-${SYSPASS_BRANCH} sysPass
+    if [ ! -d "${SYSPASS_DIR}" ]; then
+      mv -f sysPass-${SYSPASS_BRANCH} ${SYSPASS_DIR}
     else
-      cp -a sysPass-${SYSPASS_BRANCH}/* sysPass/
+      cp -a sysPass-${SYSPASS_BRANCH}/* ${SYSPASS_DIR}/
     fi
 
     echo -e "${COLOR_YELLOW}setup_app: Setting up permissions${COLOR_NC}"
 
-    chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R sysPass/
-    chmod g+w -R sysPass/
-    chmod 750 sysPass/app/config sysPass/app/backup sysPass/app/cache sysPass/app/temp
+    chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R ${SYSPASS_DIR}/
+    chmod g+w -R ${SYSPASS_DIR}/
+    chmod 750 ${SYSPASS_DIR}/app/config \
+      ${SYSPASS_DIR}/app/backup \
+      ${SYSPASS_DIR}/app/cache \
+      ${SYSPASS_DIR}/app/temp
   fi
 }
 
 setup_composer () {
-  pushd ./sysPass
+  pushd ${SYSPASS_DIR}
 
   if [ -e "composer.lock" -a -d "vendor" ]; then
     echo -e "${COLOR_YELLOW}setup_composer: Composer already set up${COLOR_NC}"
     popd
+
+    run_composer update --optimize-autoloader
+
     return 0
   fi
 
@@ -52,11 +60,12 @@ setup_composer () {
 
     gosu ${SYSPASS_UID} php composer-setup.php --quiet
     gosu ${SYSPASS_UID} rm -f composer-setup.php
+  else
+    gosu ${SYSPASS_UID} php composer.phar self-update
   fi
 
-  gosu ${SYSPASS_UID} php composer.phar self-update
-
-  [[ $? -eq 0 && -e "composer.json" ]] && gosu ${SYSPASS_UID} php composer.phar install
+  [[ $? -eq 0 && -e "composer.json" ]] \
+    && gosu ${SYSPASS_UID} php composer.phar install --optimize-autoloader
 
   popd
 }
@@ -99,12 +108,12 @@ setup_apache () {
 }
 
 run_composer () {
-  pushd ./sysPass
+  pushd ${SYSPASS_DIR}
 
   if [ -e "./composer.phar" -a -e "./composer.lock" ]; then
     echo -e "${COLOR_YELLOW}run_composer: Running composer${COLOR_NC}"
 
-    gosu ${SYSPASS_UID} php composer.phar "$@"
+    gosu ${SYSPASS_UID} php composer.phar "$@" --working-dir ${SYSPASS_DIR}
   else
     echo -e "${COLOR_RED}run_composer: Error, composer not set up${COLOR_NC}"
   fi
@@ -114,7 +123,7 @@ run_composer () {
 
 echo -e "${COLOR_YELLOW}entrypoint: Starting with UID : ${SYSPASS_UID}${COLOR_NC}"
 id ${SYSPASS_UID} > /dev/null 2>&1 || useradd --shell /bin/bash -u ${SYSPASS_UID} -o -c "" -m user
-export HOME=/home/user
+export HOME=${SYSPASS_DIR}
 
 setup_app
 

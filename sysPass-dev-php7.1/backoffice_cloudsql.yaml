@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: backoffice
+    version: __IMAGE_VERSION__
+  name: czz-backoffice
+  namespace: __NAMESPACE__
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      service: backoffice
+  template:
+    metadata:
+      annotations:
+        date: "__VERSION_DATE__"
+      labels:
+        service: backoffice
+    spec:
+      containers:
+      # [START backoffice_container]
+      - env:
+        - name: COMERZZIA_DB_CLASS
+          valueFrom:
+            configMapKeyRef:
+              key: COMERZZIA_DB_CLASS
+              name: czz-backoffice
+        - name: COMERZZIA_DB_DRIVER
+          valueFrom:
+            configMapKeyRef:
+              key: COMERZZIA_DB_DRIVER
+              name: czz-backoffice
+        - name: COMERZZIA_DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: COMERZZIA_DB_PASS
+              name: cloudsql-db-credentials-czz-backoffice
+        - name: COMERZZIA_DB_URL
+          valueFrom:
+            configMapKeyRef:
+              key: COMERZZIA_DB_URL
+              name: czz-backoffice
+        - name: COMERZZIA_DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: COMERZZIA_DB_USER
+              name: cloudsql-db-credentials-czz-backoffice
+        image: __IMAGE_NAME__:__IMAGE_VERSION__
+        imagePullPolicy: Always
+        name: backoffice
+        volumeMounts:
+        - mountPath: /apps/bin/jboss/modules/conf/comerzzia/main
+          name: czz-config
+      # [END backoffice_container]
+      # [START proxy_container]
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=__DB_INSTANCE__",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        # [START cloudsql_security_context]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        # [END cloudsql_security_context]
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+      # [END proxy_container]
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+    # [START volumes]
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: czz-config
+          configMap:
+            defaultMode: 420
+            name: czz-config
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
