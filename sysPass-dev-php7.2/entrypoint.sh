@@ -10,6 +10,8 @@ XDEBUG_IDE_KEY=${XDEBUG_IDE_KEY:-"ide"}
 
 SYSPASS_DIR="/var/www/html/sysPass"
 
+GOSU="gosu ${SYSPASS_UID}"
+
 setup_app () {
   if [ ! -e "${SYSPASS_DIR}/index.php" ]; then
     echo -e "${COLOR_YELLOW}setup_app: Unpacking sysPass${COLOR_NC}"
@@ -36,36 +38,40 @@ setup_app () {
 setup_composer () {
   pushd ${SYSPASS_DIR}
 
+  if [ ! -e "composer.phar" ]; then
+    echo -e "${COLOR_YELLOW}setup_composer: Downloading composer${COLOR_NC}"
+
+    EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
+    ${GOSU} php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")"
+
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
+        >&2 echo 'ERROR: Invalid installer signature'
+        ${GOSU} rm -f composer-setup.php
+        exit 1
+    fi
+
+    ${GOSU} php composer-setup.php --quiet
+    ${GOSU} rm -f composer-setup.php
+  else
+    echo -e "${COLOR_YELLOW}setup_composer: Updating composer${COLOR_NC}"
+
+    ${GOSU} php composer.phar self-update
+  fi
+
   if [ -e "composer.lock" -a -d "vendor" ]; then
     echo -e "${COLOR_YELLOW}setup_composer: Composer already set up${COLOR_NC}"
     popd
 
-    run_composer update --optimize-autoloader
+    run_composer update --no-dev --classmap-authoritative
 
     return 0
   fi
 
   echo -e "${COLOR_YELLOW}setup_composer: Setting up composer${COLOR_NC}"
 
-  if [ ! -e "composer.phar" ]; then
-    EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
-    gosu ${SYSPASS_UID} php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")"
-
-    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
-        >&2 echo 'ERROR: Invalid installer signature'
-        gosu ${SYSPASS_UID} rm -f composer-setup.php
-        exit 1
-    fi
-
-    gosu ${SYSPASS_UID} php composer-setup.php --quiet
-    gosu ${SYSPASS_UID} rm -f composer-setup.php
-  else
-    gosu ${SYSPASS_UID} php composer.phar self-update
-  fi
-
   [[ $? -eq 0 && -e "composer.json" ]] \
-    && gosu ${SYSPASS_UID} php composer.phar install --optimize-autoloader
+    && ${GOSU} php composer.phar install --no-dev --classmap-authoritative
 
   popd
 }
@@ -113,7 +119,7 @@ run_composer () {
   if [ -e "./composer.phar" -a -e "./composer.lock" ]; then
     echo -e "${COLOR_YELLOW}run_composer: Running composer${COLOR_NC}"
 
-    gosu ${SYSPASS_UID} php composer.phar "$@" --working-dir ${SYSPASS_DIR}
+    ${GOSU} php composer.phar "$@" --working-dir ${SYSPASS_DIR}
   else
     echo -e "${COLOR_RED}run_composer: Error, composer not set up${COLOR_NC}"
   fi
@@ -156,6 +162,6 @@ case "$1" in
     ;;
   *)
     echo -e "${COLOR_YELLOW}entrypoint: Starting $@${COLOR_NC}"
-    exec gosu ${SYSPASS_UID} "$@"
+    exec ${GOSU} "$@"
     ;;
 esac
