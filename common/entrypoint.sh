@@ -18,8 +18,8 @@ APACHE_PID_FILE="/var/run/apache2.pid"
 
 GOSU="gosu ${SYSPASS_UID}"
 
-if [ -e init-functions ]; then
-  . init-functions
+if [ -e /usr/local/sbin/init-functions ]; then
+  . /usr/local/sbin/init-functions
 fi
 
 setup_app () {
