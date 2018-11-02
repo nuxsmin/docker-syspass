@@ -123,7 +123,9 @@ run_composer () {
 }
 
 setup_composer_extensions () {
-  if [ -n ${COMPOSER_EXTENSIONS} ]; then
+  if [ -n "${COMPOSER_EXTENSIONS}" ]; then
+    echo -e "${COLOR_YELLOW}setup_composer_extensions: ${COMPOSER_EXTENSIONS}${COLOR_NC}"
+
     run_composer require ${COMPOSER_EXTENSIONS}
   fi
 }
