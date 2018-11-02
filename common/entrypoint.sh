@@ -8,8 +8,6 @@ COLOR_GREEN='\033[0;32m'
 XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST:-"172.17.0.1"}
 XDEBUG_IDE_KEY=${XDEBUG_IDE_KEY:-"ide"}
 
-SYSPASS_DIR="/var/www/html/sysPass"
-
 APACHE_RUN_USER="www-data"
 APACHE_RUN_GROUP="www-data"
 APACHE_LOG_DIR="/var/log/apache2"

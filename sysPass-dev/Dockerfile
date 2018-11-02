@@ -7,15 +7,15 @@ FROM composer:1.7 as bootstrap
 
 ENV SYSPASS_BRANCH="devel-3.0"
 
-RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git
-
-RUN composer install \
+RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
+  && composer install \
     --ignore-platform-reqs \
     --no-interaction \
     --no-plugins \
     --no-scripts \
     --prefer-dist \
-    --optimize-autoloader
+    --optimize-autoloader \
+    --working-dir /app/sysPass
 
 FROM debian:stretch as app
 LABEL maintainer=nuxsmin@syspass.org version=3.0-beta php=7.0 environment=debug
@@ -31,7 +31,8 @@ RUN apt-get update \
 	&& a2enmod proxy_fcgi setenvif \
 	&& a2enconf php7.0-fpm
 
-ENV SYSPASS_UID=9001
+ENV SYSPASS_UID 9001
+ENV SYSPASS_DIR "/var/www/html/sysPass"
 
 WORKDIR /var/www/html
 
@@ -48,7 +49,7 @@ COPY entrypoint.sh init-functions /usr/local/sbin/
 
 RUN chmod 755 /usr/local/sbin/entrypoint.sh
 
-COPY --from=bootstrap /app/ /var/www/html/sysPass/
+COPY --from=bootstrap --chown=${SYSPASS_UID} /app/sysPass/ ${SYSPASS_DIR}/
 
 COPY --from=bootstrap /usr/bin/composer /usr/bin/
 
