@@ -61,27 +61,20 @@ setup_composer () {
         exit 1
     fi
 
-    ${GOSU} php composer-setup.php --quiet
-    ${GOSU} rm -f composer-setup.php
+    ${GOSU} php composer-setup.php --quiet && ${GOSU} rm -f composer-setup.php
   else
     echo -e "${COLOR_YELLOW}setup_composer: Updating composer${COLOR_NC}"
 
     ${GOSU} php composer.phar self-update
   fi
 
-  if [ -e "composer.lock" -a -d "vendor" ]; then
-    echo -e "${COLOR_YELLOW}setup_composer: Composer already set up${COLOR_NC}"
-    popd
+  if [ -e "composer.json" -a -e "composer.json" ]; then
+    echo -e "${COLOR_YELLOW}setup_composer: Setting up composer${COLOR_NC}"
 
-    ${GOSU} php composer.phar update --working-dir ${SYSPASS_DIR} --no-dev --classmap-authoritative
-
-    return 0
+    ${GOSU} php composer.phar install --working-dir ${SYSPASS_DIR} --no-dev --classmap-authoritative
+  else
+    echo -e "${COLOR_RED}setup_composer: Error, composer not set up${COLOR_NC}"
   fi
-
-  echo -e "${COLOR_YELLOW}setup_composer: Setting up composer${COLOR_NC}"
-
-  [[ $? -eq 0 && -e "composer.json" ]] \
-    && ${GOSU} php composer.phar install --no-dev --classmap-authoritative
 
   popd
 }
@@ -118,7 +111,7 @@ setup_locales() {
 }
 
 run_composer () {
-  if [ -e "./composer.phar" -a -e "./composer.lock" ]; then
+  if [ -e "./composer.phar" -a -e "./composer.lock" -a -e "composer.json" ]; then
     echo -e "${COLOR_YELLOW}run_composer: Running composer${COLOR_NC}"
 
     ${GOSU} php composer.phar "$@" --working-dir ${SYSPASS_DIR}
