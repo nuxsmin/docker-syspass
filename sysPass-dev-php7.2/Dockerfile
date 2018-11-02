@@ -42,7 +42,7 @@ COPY 000-default.conf /etc/apache2/sites-available/
 COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Custom entrypoint
-COPY entrypoint.sh /usr/local/sbin/
+COPY entrypoint.sh init-functions /usr/local/sbin/
 
 RUN wget https://github.com/nuxsmin/sysPass/archive/${SYSPASS_BRANCH}.zip \
 	&& chmod 755 /usr/local/sbin/entrypoint.sh
