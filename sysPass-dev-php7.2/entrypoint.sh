@@ -73,7 +73,7 @@ setup_composer () {
     echo -e "${COLOR_YELLOW}setup_composer: Composer already set up${COLOR_NC}"
     popd
 
-    run_composer update --no-dev --classmap-authoritative
+    ${GOSU} php composer.phar update --working-dir ${SYSPASS_DIR} --no-dev --classmap-authoritative
 
     return 0
   fi
