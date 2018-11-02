@@ -49,7 +49,7 @@ COPY entrypoint.sh init-functions /usr/local/sbin/
 
 RUN chmod 755 /usr/local/sbin/entrypoint.sh
 
-COPY --from=bootstrap --chown=${SYSPASS_UID} /app/sysPass/ ${SYSPASS_DIR}/
+COPY --from=bootstrap /app/sysPass/ ${SYSPASS_DIR}/
 
 COPY --from=bootstrap /usr/bin/composer /usr/bin/
 
