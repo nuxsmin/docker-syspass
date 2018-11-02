@@ -25,17 +25,7 @@ if [ -e /usr/local/sbin/init-functions ]; then
 fi
 
 setup_app () {
-  if [ ! -e "${SYSPASS_DIR}/index.php" ]; then
-    echo -e "${COLOR_YELLOW}setup_app: Unpacking sysPass${COLOR_NC}"
-
-    unzip ${SYSPASS_BRANCH}.zip
-
-    if [ ! -d "${SYSPASS_DIR}" ]; then
-      mv -f sysPass-${SYSPASS_BRANCH} ${SYSPASS_DIR}
-    else
-      cp -a sysPass-${SYSPASS_BRANCH}/* ${SYSPASS_DIR}/
-    fi
-
+  if [ -e "${SYSPASS_DIR}/index.php" ]; then
     echo -e "${COLOR_YELLOW}setup_app: Setting up permissions${COLOR_NC}"
 
     chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R ${SYSPASS_DIR}/
@@ -45,40 +35,6 @@ setup_app () {
       ${SYSPASS_DIR}/app/cache \
       ${SYSPASS_DIR}/app/temp
   fi
-}
-
-setup_composer () {
-  pushd ${SYSPASS_DIR}
-
-  if [ ! -e "composer.phar" ]; then
-    echo -e "${COLOR_YELLOW}setup_composer: Downloading composer${COLOR_NC}"
-
-    EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
-    ${GOSU} php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")"
-
-    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
-        >&2 echo 'ERROR: Invalid installer signature'
-        ${GOSU} rm -f composer-setup.php
-        exit 1
-    fi
-
-    ${GOSU} php composer-setup.php --quiet && ${GOSU} rm -f composer-setup.php
-  else
-    echo -e "${COLOR_YELLOW}setup_composer: Updating composer${COLOR_NC}"
-
-    ${GOSU} php composer.phar self-update
-  fi
-
-  if [ -e "composer.json" -a -e "composer.json" ]; then
-    echo -e "${COLOR_YELLOW}setup_composer: Setting up composer${COLOR_NC}"
-
-    ${GOSU} php composer.phar install ${COMPOSER_OPTIONS}
-  else
-    echo -e "${COLOR_RED}setup_composer: Error, composer not set up${COLOR_NC}"
-  fi
-
-  popd
 }
 
 setup_locales() {
@@ -113,10 +69,10 @@ setup_locales() {
 }
 
 run_composer () {
-  if [ -e "./composer.phar" -a -e "./composer.lock" -a -e "composer.json" ]; then
+  if [ -e "./composer.lock" -a -e "composer.json" ]; then
     echo -e "${COLOR_YELLOW}run_composer: Running composer${COLOR_NC}"
 
-    ${GOSU} php composer.phar "$@" --working-dir ${SYSPASS_DIR}
+    ${GOSU} composer "$@" --working-dir ${SYSPASS_DIR}
   else
     echo -e "${COLOR_RED}run_composer: Error, composer not set up${COLOR_NC}"
   fi
@@ -138,7 +94,6 @@ setup_app
 
 case "$1" in
   "apache")
-    setup_composer
     setup_composer_extensions
     setup_locales
     setup_apache
@@ -153,11 +108,9 @@ case "$1" in
     run_apache
     ;;
   "update")
-    setup_composer
     run_composer update
     ;;
   "composer")
-    setup_composer
     shift
     run_composer "$@"
     ;;
