@@ -16,6 +16,8 @@ APACHE_LOG_DIR="/var/log/apache2"
 APACHE_LOCK_DIR="/var/lock/apache2"
 APACHE_PID_FILE="/var/run/apache2.pid"
 
+COMPOSER_OPTIONS="--working-dir ${SYSPASS_DIR} --no-dev --classmap-authoritative"
+
 GOSU="gosu ${SYSPASS_UID}"
 
 if [ -e /usr/local/sbin/init-functions ]; then
@@ -71,7 +73,7 @@ setup_composer () {
   if [ -e "composer.json" -a -e "composer.json" ]; then
     echo -e "${COLOR_YELLOW}setup_composer: Setting up composer${COLOR_NC}"
 
-    ${GOSU} php composer.phar install --working-dir ${SYSPASS_DIR} --no-dev --classmap-authoritative
+    ${GOSU} php composer.phar install ${COMPOSER_OPTIONS}
   else
     echo -e "${COLOR_RED}setup_composer: Error, composer not set up${COLOR_NC}"
   fi

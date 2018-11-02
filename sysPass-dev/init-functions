@@ -1,3 +1,5 @@
+COMPOSER_OPTIONS="--working-dir ${SYSPASS_DIR}"
+
 setup_apache () {
   if [ ! -e "/etc/php/7.0/apache2/conf.d/20-xdebug.ini" ]; then
     return 0
