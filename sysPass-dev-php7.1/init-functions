@@ -1,0 +1,9 @@
+setup_apache () {
+  echo -e "${COLOR_YELLOW}setup_apache: Setting up xdebug variables${COLOR_NC}"
+  sed -i 's/__XDEBUG_REMOTE_HOST__/'"$XDEBUG_REMOTE_HOST"'/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  sed -i 's/__XDEBUG_IDE_KEY__/'"$XDEBUG_IDE_KEY"'/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+}
+
+run_apache () {
+  apache2-foreground
+}

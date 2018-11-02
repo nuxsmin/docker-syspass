@@ -10,7 +10,17 @@ XDEBUG_IDE_KEY=${XDEBUG_IDE_KEY:-"ide"}
 
 SYSPASS_DIR="/var/www/html/sysPass"
 
+APACHE_RUN_USER="www-data"
+APACHE_RUN_GROUP="www-data"
+APACHE_LOG_DIR="/var/log/apache2"
+APACHE_LOCK_DIR="/var/lock/apache2"
+APACHE_PID_FILE="/var/run/apache2.pid"
+
 GOSU="gosu ${SYSPASS_UID}"
+
+if [ -e init-functions ]; then
+  . init-functions
+fi
 
 setup_app () {
   if [ ! -e "${SYSPASS_DIR}/index.php" ]; then
@@ -107,16 +117,6 @@ setup_locales() {
   fi
 }
 
-setup_apache () {
-  if [ ! -e "/etc/php/7.0/apache2/conf.d/20-xdebug.ini" ]; then
-    return 0
-  fi
-
-  echo -e "${COLOR_YELLOW}setup_apache: Setting up xdebug variables${COLOR_NC}"
-  sed -i 's/__XDEBUG_REMOTE_HOST__/'"$XDEBUG_REMOTE_HOST"'/' /etc/php/7.0/apache2/conf.d/20-xdebug.ini
-  sed -i 's/__XDEBUG_IDE_KEY__/'"$XDEBUG_IDE_KEY"'/' /etc/php/7.0/apache2/conf.d/20-xdebug.ini
-}
-
 run_composer () {
   if [ -e "./composer.phar" -a -e "./composer.lock" ]; then
     echo -e "${COLOR_YELLOW}run_composer: Running composer${COLOR_NC}"
@@ -124,6 +124,12 @@ run_composer () {
     ${GOSU} php composer.phar "$@" --working-dir ${SYSPASS_DIR}
   else
     echo -e "${COLOR_RED}run_composer: Error, composer not set up${COLOR_NC}"
+  fi
+}
+
+setup_composer_extensions () {
+  if [ -n ${COMPOSER_EXTENSIONS} ]; then
+    run_composer require ${COMPOSER_EXTENSIONS}
   fi
 }
 
@@ -136,6 +142,7 @@ setup_app
 case "$1" in
   "apache")
     setup_composer
+    setup_composer_extensions
     setup_locales
     setup_apache
 
@@ -146,10 +153,7 @@ case "$1" in
     echo -e "######${COLOR_NC}"
     echo -e "${COLOR_YELLOW}entrypoint: Starting Apache${COLOR_NC}"
 
-    # Apache gets grumpy about PID files pre-existing
-    rm -f ${APACHE_PID_FILE}
-
-    exec /usr/sbin/apache2ctl -DFOREGROUND
+    run_apache
     ;;
   "update")
     setup_composer

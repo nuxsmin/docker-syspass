@@ -17,13 +17,8 @@ RUN apt-get update \
 	&& a2enmod proxy_fcgi setenvif \
 	&& a2enconf php7.0-fpm
 
-ENV APACHE_RUN_USER="www-data" \
-	APACHE_RUN_GROUP="www-data" \
-	APACHE_LOG_DIR="/var/log/apache2" \
-	APACHE_LOCK_DIR="/var/lock/apache2" \
-	APACHE_PID_FILE="/var/run/apache2.pid" \
-	SYSPASS_BRANCH="devel-3.0" \
-	SYSPASS_UID=9001
+ENV SYSPASS_BRANCH="devel-3.0" \
+  SYSPASS_UID=9001
 
 WORKDIR /var/www/html
 
