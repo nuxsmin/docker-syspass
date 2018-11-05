@@ -26,9 +26,18 @@ setup_app () {
   if [ -e "${SYSPASS_DIR}/index.php" ]; then
     echo -e "${COLOR_YELLOW}setup_app: Setting up permissions${COLOR_NC}"
 
+    chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R \
+      ${SYSPASS_DIR}/app/config \
+      ${SYSPASS_DIR}/app/backup \
+      ${SYSPASS_DIR}/app/cache \
+      ${SYSPASS_DIR}/app/temp
+
     if [ ${SYSPASS_UID} -ne 9001 ]; then
-      chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R ${SYSPASS_DIR}/
-      chmod g+w -R ${SYSPASS_DIR}/
+      chmod g+w -R ${SYSPASS_DIR}/ \
+        ${SYSPASS_DIR}/app/config \
+        ${SYSPASS_DIR}/app/backup \
+        ${SYSPASS_DIR}/app/cache \
+        ${SYSPASS_DIR}/app/temp
     fi
 
     chmod 750 ${SYSPASS_DIR}/app/config \
