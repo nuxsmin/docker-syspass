@@ -25,7 +25,7 @@ RUN apt-get update \
 	apache2 libapache2-mod-php7.0 php-pear php7.0 php7.0-cgi php7.0-cli \
 	php7.0-common php7.0-fpm php7.0-gd php7.0-json php7.0-mysql php7.0-readline \
 	php7.0-curl php7.0-intl php7.0-ldap php7.0-mcrypt php7.0-xml php7.0-mbstring \
-	php7.0-xdebug git gosu \
+	php7.0-xdebug git gosu unzip \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
 	&& a2enmod proxy_fcgi setenvif \

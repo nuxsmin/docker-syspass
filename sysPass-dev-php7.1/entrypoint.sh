@@ -79,6 +79,8 @@ setup_locales() {
 }
 
 run_composer () {
+  pushd ${SYSPASS_DIR}
+
   if [ -e "./composer.lock" -a -e "composer.json" ]; then
     echo -e "${COLOR_YELLOW}run_composer: Running composer${COLOR_NC}"
 
@@ -86,6 +88,8 @@ run_composer () {
   else
     echo -e "${COLOR_RED}run_composer: Error, composer not set up${COLOR_NC}"
   fi
+
+  popd
 }
 
 setup_composer_extensions () {

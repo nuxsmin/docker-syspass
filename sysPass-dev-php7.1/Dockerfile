@@ -31,6 +31,7 @@ RUN apt-get update \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
+    unzip \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
 	&& pecl install xdebug-2.6.0 \
