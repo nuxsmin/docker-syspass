@@ -5,7 +5,7 @@
 
 FROM composer:1.7 as bootstrap
 
-ENV SYSPASS_BRANCH="devel-3.0"
+ENV SYSPASS_BRANCH="3.0"
 
 RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
   && composer install \
