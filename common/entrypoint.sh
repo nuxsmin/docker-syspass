@@ -63,6 +63,8 @@ setup_locales() {
     echo "ru_RU.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "pl_PL.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "nl_NL.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "pt_BR.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "da.UTF-8 UTF-8" >> $LOCALE_GEN
 
     echo 'LANG="en_US.UTF-8"' > /etc/default/locale
 
