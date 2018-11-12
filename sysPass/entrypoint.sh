@@ -30,16 +30,18 @@ setup_app () {
     ${SYSPASS_DIR}/app/backup \
     ${SYSPASS_DIR}/app/cache \
     ${SYSPASS_DIR}/app/resources \
-    ${SYSPASS_DIR}/app/temp \
-    ${SYSPASS_DIR}/composer.json \
-    ${SYSPASS_DIR}/composer.lock \
-    ${SYSPASS_DIR}/vendor"
+    ${SYSPASS_DIR}/app/temp"
 
     chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R ${RW_DIRS}
 
     if [ ${SYSPASS_UID} -ne 9001 ]; then
       chmod g+w -R ${SYSPASS_DIR}/ ${RW_DIRS}
     fi
+
+    chown ${SYSPASS_UID:${SYSPASS_UID} -R \
+    ${SYSPASS_DIR}/composer.json \
+    ${SYSPASS_DIR}/composer.lock \
+    ${SYSPASS_DIR}/vendor
 
     chmod 750 ${SYSPASS_DIR}/app/config \
     ${SYSPASS_DIR}/app/backup \
