@@ -26,24 +26,25 @@ setup_app () {
   if [ -e "${SYSPASS_DIR}/index.php" ]; then
     echo -e "${COLOR_YELLOW}setup_app: Setting up permissions${COLOR_NC}"
 
-    chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R \
-      ${SYSPASS_DIR}/app/config \
-      ${SYSPASS_DIR}/app/backup \
-      ${SYSPASS_DIR}/app/cache \
-      ${SYSPASS_DIR}/app/temp
+    RW_DIRS="${SYSPASS_DIR}/app/config \
+    ${SYSPASS_DIR}/app/backup \
+    ${SYSPASS_DIR}/app/cache \
+    ${SYSPASS_DIR}/app/resources \
+    ${SYSPASS_DIR}/app/temp \
+    ${SYSPASS_DIR}/composer.json \
+    ${SYSPASS_DIR}/composer.lock \
+    ${SYSPASS_DIR}/vendor"
+
+    chown ${APACHE_RUN_USER}:${SYSPASS_UID} -R ${RW_DIRS}
 
     if [ ${SYSPASS_UID} -ne 9001 ]; then
-      chmod g+w -R ${SYSPASS_DIR}/ \
-        ${SYSPASS_DIR}/app/config \
-        ${SYSPASS_DIR}/app/backup \
-        ${SYSPASS_DIR}/app/cache \
-        ${SYSPASS_DIR}/app/temp
+      chmod g+w -R ${SYSPASS_DIR}/ ${RW_DIRS}
     fi
 
     chmod 750 ${SYSPASS_DIR}/app/config \
-      ${SYSPASS_DIR}/app/backup \
-      ${SYSPASS_DIR}/app/cache \
-      ${SYSPASS_DIR}/app/temp
+    ${SYSPASS_DIR}/app/backup \
+    ${SYSPASS_DIR}/app/cache \
+    ${SYSPASS_DIR}/app/temp
   fi
 }
 
