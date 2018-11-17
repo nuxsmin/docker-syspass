@@ -42,7 +42,7 @@ $ docker run --name sysPass-app-devel nuxsmin/docker-syspass:devel
 Please take into account that you will need to setup a database if you choose to build the sysPass-only container.
 
 
-## 3.0-rc1 release
+## 3.0-rc2 release
 
 These images are based on Debian 9 (Stretch), Apache 2.4 webserver with PHP 7.0 module and MariaDB 10.1
 
