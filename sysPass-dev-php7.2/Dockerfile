@@ -19,7 +19,7 @@ RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git 
 
 FROM php:7.2-apache-stretch as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.0-rc5 php=7.2 environment=debug
+LABEL maintainer=nuxsmin@syspass.org version=3.0-rc6 php=7.2 environment=debug
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -45,7 +45,7 @@ ENV SYSPASS_DIR "/var/www/html/sysPass"
 
 WORKDIR /var/www/html
 
-LABEL build=18121001
+LABEL build=18121601
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
