@@ -45,7 +45,7 @@ ENV SYSPASS_DIR "/var/www/html/sysPass"
 
 WORKDIR /var/www/html
 
-LABEL build=18121601
+LABEL build=18121701
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
