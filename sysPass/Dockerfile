@@ -20,7 +20,7 @@ RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git 
 
 FROM debian:stretch as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.0-rc6 php=7.0 environment=production
+LABEL maintainer=nuxsmin@syspass.org version=3.0-rc7 php=7.0 environment=production
 
 RUN apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get -y install locales \
@@ -38,7 +38,7 @@ ENV SYSPASS_DIR "/var/www/html/sysPass"
 
 WORKDIR /var/www/html
 
-LABEL build=18121601
+LABEL build=18122201
 
 # Mininal HTTP-only Apache config
 COPY 000-default.conf /etc/apache2/sites-available/
