@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-FROM debian:jessie
-LABEL maintainer=nuxsmin@syspass.org from=github version=devel
-
-=======
->>>>>>> 3.0
 # Usage:
-# docker run -d --name=sysPass-beta -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0-beta-php7.0
+# docker run -d --name=sysPass-dev -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0-dev
 # webroot: /var/www/html/
 # Apache2 config: /etc/apache2/
 
@@ -46,28 +40,11 @@ ENV APACHE_RUN_USER="www-data" \
 		APACHE_LOG_DIR="/var/log/apache2" \
 		APACHE_LOCK_DIR="/var/lock/apache2" \
 		APACHE_PID_FILE="/var/run/apache2.pid" \
-		SYSPASS_BRANCH="devel" \
+		SYSPASS_BRANCH="master" \
 		SYSPASS_UID=9001
 
 WORKDIR /var/www/html
 
-<<<<<<< HEAD
-# Mininal Apache config using provided .conf files
-COPY 000-default.conf default-ssl.conf /etc/apache2/sites-available/
-
-# Custom entrypoint to run Apache on foreground
-COPY entrypoint.sh /usr/local/sbin/
-
-# Enable SSL site and set entrypoint permissions
-RUN a2enmod ssl \
-	&& a2ensite default-ssl \
-	&& chmod 755 /usr/local/sbin/entrypoint.sh
-
-LABEL build=18061901
-
-# Download and install the latest sysPass stable release from GitHub
-RUN wget https://github.com/nuxsmin/sysPass/archive/${SYSPASS_BRANCH}.zip
-=======
 LABEL build=18122601
 
 # Mininal HTTP-only Apache config
@@ -81,17 +58,12 @@ COPY entrypoint.sh init-functions /usr/local/sbin/
 
 RUN chmod 755 /usr/local/sbin/entrypoint.sh \
   && a2ensite default-ssl
->>>>>>> 3.0
 
 COPY --from=bootstrap /app/sysPass/ ${SYSPASS_DIR}/
 
-<<<<<<< HEAD
-VOLUME ["/var/www/html/sysPass/config", "/var/www/html/sysPass/backup"]
-=======
 COPY --from=bootstrap /usr/bin/composer /usr/bin/
 
 EXPOSE 80 443
->>>>>>> 3.0
 
 ENTRYPOINT ["/usr/local/sbin/entrypoint.sh"]
 

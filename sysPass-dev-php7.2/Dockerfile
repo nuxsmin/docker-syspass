@@ -1,5 +1,5 @@
 # Usage:
-# docker run -d --name=sysPass-beta -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0-beta-php7.0
+# docker run -d --name=sysPass -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0-php7.2
 # webroot: /var/www/html/
 # Apache2 config: /etc/apache2/
 

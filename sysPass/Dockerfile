@@ -1,20 +1,7 @@
-<<<<<<< HEAD
-FROM debian:jessie
-LABEL maintainer=nuxsmin@syspass.org from=github version=stable-master
-
-=======
->>>>>>> 3.0
 # Usage:
-# docker run -d --name=sysPass-beta -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0-beta
+# docker run -d --name=sysPass -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0
 # webroot: /var/www/html/
 # Apache2 config: /etc/apache2/
-
-<<<<<<< HEAD
-RUN apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get -y install locales \
-	apache2 libapache2-mod-php5 php5 php5-curl php5-mysqlnd php5-gd \
-	php5-json php5-ldap php5-mcrypt wget unzip vim \
-=======
 FROM composer:1.7 as bootstrap
 
 ENV SYSPASS_BRANCH="master"
@@ -67,17 +54,10 @@ COPY ["000-default.conf", "default-ssl.conf", "/etc/apache2/sites-available/"]
 # Custom entrypoint
 COPY entrypoint.sh init-functions /usr/local/sbin/
 
-<<<<<<< HEAD
-LABEL version=2.1.16.18061901
-
-# Download and install the latest sysPass stable release from GitHub
-RUN wget https://github.com/nuxsmin/sysPass/archive/${SYSPASS_BRANCH}.zip
-=======
 RUN chmod 755 /usr/local/sbin/entrypoint.sh \
   && a2ensite default-ssl
 
 COPY --from=bootstrap /app/sysPass/ ${SYSPASS_DIR}/
->>>>>>> 3.0
 
 COPY --from=bootstrap /usr/bin/composer /usr/bin/
 
