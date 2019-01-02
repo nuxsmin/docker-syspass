@@ -5,7 +5,7 @@
 
 FROM composer:1.7 as bootstrap
 
-ENV SYSPASS_BRANCH="3.0"
+ENV SYSPASS_BRANCH="master"
 
 RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
   && composer install \
@@ -19,7 +19,7 @@ RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git 
 
 FROM debian:stretch as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.0-rc7 php=7.0 environment=debug
+LABEL maintainer=nuxsmin@syspass.org version=3.0 php=7.0 environment=debug
 
 RUN apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get -y install locales \
@@ -29,7 +29,7 @@ RUN apt-get update \
 	php7.0-xdebug git gosu unzip \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
-	&& a2enmod proxy_fcgi setenvif \
+	&& a2enmod proxy_fcgi setenvif ssl \
 	&& a2enconf php7.0-fpm
 
 ENV SYSPASS_UID 9001
@@ -37,10 +37,10 @@ ENV SYSPASS_DIR "/var/www/html/sysPass"
 
 WORKDIR /var/www/html
 
-LABEL build=18122201
+LABEL build=18122601
 
 # Mininal HTTP-only Apache config
-COPY 000-default.conf /etc/apache2/sites-available/
+COPY ["000-default.conf", "default-ssl.conf", "/etc/apache2/sites-available/"]
 
 # Xdebug module config
 COPY 20-xdebug.ini /etc/php/7.0/apache2/conf.d/20-xdebug.ini
@@ -48,7 +48,8 @@ COPY 20-xdebug.ini /etc/php/7.0/apache2/conf.d/20-xdebug.ini
 # Custom entrypoint
 COPY entrypoint.sh init-functions /usr/local/sbin/
 
-RUN chmod 755 /usr/local/sbin/entrypoint.sh
+RUN chmod 755 /usr/local/sbin/entrypoint.sh \
+  && a2ensite default-ssl
 
 COPY --from=bootstrap /app/sysPass/ ${SYSPASS_DIR}/
 
