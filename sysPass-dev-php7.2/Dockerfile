@@ -56,7 +56,8 @@ COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 # Custom entrypoint
 COPY entrypoint.sh init-functions /usr/local/sbin/
 
-RUN chmod 755 /usr/local/sbin/entrypoint.sh
+RUN chmod 755 /usr/local/sbin/entrypoint.sh \
+  && a2ensite default-ssl
 
 COPY --from=bootstrap /app/sysPass/ ${SYSPASS_DIR}/
 

@@ -46,7 +46,8 @@ COPY ["000-default.conf", "default-ssl.conf", "/etc/apache2/sites-available/"]
 # Custom entrypoint
 COPY entrypoint.sh init-functions /usr/local/sbin/
 
-RUN chmod 755 /usr/local/sbin/entrypoint.sh
+RUN chmod 755 /usr/local/sbin/entrypoint.sh \
+  && a2ensite default-ssl
 
 COPY --from=bootstrap /app/sysPass/ ${SYSPASS_DIR}/
 
