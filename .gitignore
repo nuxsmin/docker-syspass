@@ -1,2 +1,2 @@
-docker-compose-local.yml
+docker-compose-*.yml
 /.project
