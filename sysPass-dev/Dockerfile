@@ -20,7 +20,7 @@ ENV APACHE_RUN_USER="www-data" \
 		APACHE_LOG_DIR="/var/log/apache2" \
 		APACHE_LOCK_DIR="/var/lock/apache2" \
 		APACHE_PID_FILE="/var/run/apache2.pid" \
-		SYSPASS_BRANCH="devel" \
+		SYSPASS_BRANCH="2.1" \
 		SYSPASS_UID=9001
 
 WORKDIR /var/www/html
