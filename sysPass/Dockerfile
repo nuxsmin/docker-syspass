@@ -27,7 +27,6 @@ RUN apt-get update \
 	php7.0-common php7.0-fpm php7.0-gd php7.0-json php7.0-mysql php7.0-readline \
 	php7.0-curl php7.0-intl php7.0-ldap php7.0-mcrypt php7.0-xml php7.0-mbstring \
   git gosu unzip \
->>>>>>> 3.0
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/* \
 	&& a2enmod proxy_fcgi setenvif ssl \
