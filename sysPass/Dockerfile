@@ -37,7 +37,7 @@ RUN a2enmod ssl \
 LABEL version=2.1.16.18061901
 
 # Download and install the latest sysPass stable release from GitHub
-RUN wget https://github.com/nuxsmin/sysPass/archive/${SYSPASS_BRANCH}.zip
+RUN wget https://codeload.github.com/nuxsmin/docker-syspass/zip/${SYSPASS_BRANCH}
 
 EXPOSE 80 443
 

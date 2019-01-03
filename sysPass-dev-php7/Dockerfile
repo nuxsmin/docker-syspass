@@ -38,7 +38,7 @@ COPY 20-xdebug.ini /etc/php/7.0/apache2/conf.d/20-xdebug.ini
 # Cutom entrypoint
 COPY entrypoint.sh /usr/local/sbin/
 
-RUN wget https://github.com/nuxsmin/sysPass/archive/${SYSPASS_BRANCH}.zip \
+RUN wget https://codeload.github.com/nuxsmin/docker-syspass/zip/${SYSPASS_BRANCH} \
 	&& chmod 755 /usr/local/sbin/entrypoint.sh
 
 EXPOSE 80 443
