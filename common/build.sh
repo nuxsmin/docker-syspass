@@ -3,7 +3,7 @@
 TAGS="sysPass sysPass-dev sysPass-dev-php7.1 sysPass-dev-php7.2"
 BRANCH="master"
 VERSION="3.0.3"
-BUILD="19012403"
+BUILD="19012402"
 
 for TAG in ${TAGS}; do
   cp -af entrypoint.sh 000-default.conf default-ssl.conf ../${TAG}/
