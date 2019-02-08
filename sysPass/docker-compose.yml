@@ -2,7 +2,7 @@ version: '2'
 services:
   app:
     container_name: syspass-app
-    image: nuxsmin/docker-syspass:3.0
+    image: nuxsmin/docker-syspass:3.0.4
     restart: always
     ports:
       - "80"
@@ -17,7 +17,10 @@ services:
     restart: always
     image: mariadb:10.2
     environment:
-      - MYSQL_ROOT_PASSWORD=syspass
+      MARIADB_ROOT_PASSWORD: "$MARIADB_ROOT_PASSWORD"
+      MARIADB_DATABASE: "$MARIADB_DATABASE"
+      MARIADB_USER: "$MARIADB_USER"
+      MARIADB_PASSWORD: "$MARIADB_PASSWORD"
     ports:
       - "3306"
     volumes:
