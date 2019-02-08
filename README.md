@@ -23,10 +23,10 @@ $ docker-compose -p syspass up -d
 Create .env file with the next variables you can change the parameters.
 
 ```
-MARIADB_ROOT_PASSWORD=syspass
-MARIADB_DATABASE=syspass
-MARIADB_USER=syspass
-MARIADB_PASSWORD=syspass
+MYSQL_ROOT_PASSWORD=syspass
+MYSQL_DATABASE=syspass
+MYSQL_USER=syspass
+MYSQL_PASSWORD=syspass
 ```
 
 Please be aware that you will need to setup a database if you choose to build the sysPass-only container.
