@@ -11,3 +11,7 @@ for TAG in ${TAGS}; do
           s/version=[a-z0-9\.\-]\+/version='${VERSION}'/i;
           s/build=[0-9]\+/build='${BUILD}'/' ../${TAG}/Dockerfile
 done
+
+find ../ -name docker-compose.yml | while read FILE; do
+  sed -i 's/syspass:[0-9\.]\+/syspass:'${VERSION}'/' ${FILE}
+done
