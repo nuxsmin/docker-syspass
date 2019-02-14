@@ -35,7 +35,7 @@ $ docker-compose -p syspassdev up -d
 or pull it:
 
 ```
-$ docker run --name sysPass-app-devel nuxsmin/docker-syspass:devel
+$ docker run --name sysPass-app-devel syspass/syspass:3.0.x-dev
 ```
 
 Please be aware that you will need to setup a database if you choose to build the sysPass-only container.
