@@ -1,0 +1,29 @@
+version: '2'
+services:
+  app:
+    container_name: syspass-app
+    image: syspass/syspass:3.1.0-rc1-dev
+    restart: always
+    ports:
+      - "80"
+      - "443"
+    links:
+      - db
+    volumes:
+      - syspass-config:/var/www/html/sysPass/app/config
+      - syspass-backup:/var/www/html/sysPass/app/backup
+  db:
+    container_name: syspass-db
+    restart: always
+    image: mariadb:10.2
+    environment:
+      - MYSQL_ROOT_PASSWORD=syspass
+    ports:
+      - "3306"
+    volumes:
+      - syspass-db:/var/lib/mysql
+
+volumes:
+  syspass-config: {}
+  syspass-backup: {}
+  syspass-db: {}

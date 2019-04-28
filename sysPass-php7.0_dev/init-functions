@@ -1,7 +1,9 @@
-COMPOSER_OPTIONS="--working-dir ${SYSPASS_DIR}"
+if [ ${SYSPASS_DEV} -eq 1 ]; then
+  COMPOSER_OPTIONS="--working-dir ${SYSPASS_DIR} --optimize-autoloader --dev"
+fi
 
 setup_apache () {
-  if [ ! -e "/etc/php/7.0/apache2/conf.d/20-xdebug.ini" ]; then
+  if [ ! -e "/etc/php/7.0/apache2/conf.d/20-xdebug.ini" -o ${SYSPASS_DEV} -eq 0 ]; then
     return 0
   fi
 

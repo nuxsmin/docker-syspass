@@ -1,6 +1,12 @@
-COMPOSER_OPTIONS="--working-dir ${SYSPASS_DIR}"
+if [ ${SYSPASS_DEV} -eq 1 ]; then
+  COMPOSER_OPTIONS="--working-dir ${SYSPASS_DIR} --optimize-autoloader --dev"
+fi
 
 setup_apache () {
+  if [ ${SYSPASS_DEV} -eq 0 ]; then
+    return 0
+  fi
+
   echo -e "${COLOR_YELLOW}setup_apache: Setting up xdebug variables${COLOR_NC}"
   sed -i 's/__XDEBUG_REMOTE_HOST__/'"$XDEBUG_REMOTE_HOST"'/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
   sed -i 's/__XDEBUG_IDE_KEY__/'"$XDEBUG_IDE_KEY"'/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini

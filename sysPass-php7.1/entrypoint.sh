@@ -8,13 +8,7 @@ COLOR_GREEN='\033[0;32m'
 XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST:-"172.17.0.1"}
 XDEBUG_IDE_KEY=${XDEBUG_IDE_KEY:-"ide"}
 
-APACHE_RUN_USER="www-data"
-APACHE_RUN_GROUP="www-data"
-APACHE_LOG_DIR="/var/log/apache2"
-APACHE_LOCK_DIR="/var/lock/apache2"
-APACHE_PID_FILE="/var/run/apache2.pid"
-
-COMPOSER_OPTIONS="--working-dir ${SYSPASS_DIR} --no-dev --classmap-authoritative"
+COMPOSER_OPTIONS="--working-dir ${SYSPASS_DIR} --classmap-authoritative"
 
 GOSU="gosu ${SYSPASS_UID}"
 
@@ -62,6 +56,8 @@ setup_locales() {
     echo "nl_NL.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "pt_BR.UTF-8 UTF-8" >> $LOCALE_GEN
     echo "da.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "it_IT.UTF-8 UTF-8" >> $LOCALE_GEN
+    echo "fo.UTF-8 UTF-8" >> $LOCALE_GEN
 
     echo 'LANG="en_US.UTF-8"' > /etc/default/locale
 
@@ -83,7 +79,7 @@ run_composer () {
   if [ -e "./composer.lock" -a -e "composer.json" ]; then
     echo -e "${COLOR_YELLOW}run_composer: Running composer${COLOR_NC}"
 
-    ${GOSU} composer "$@" --working-dir ${SYSPASS_DIR}
+    ${GOSU} composer "$@" ${COMPOSER_OPTIONS}
   else
     echo -e "${COLOR_RED}run_composer: Error, composer not set up${COLOR_NC}"
   fi
@@ -95,7 +91,7 @@ setup_composer_extensions () {
   if [ -n "${COMPOSER_EXTENSIONS}" ]; then
     echo -e "${COLOR_YELLOW}setup_composer_extensions: ${COMPOSER_EXTENSIONS}${COLOR_NC}"
 
-    run_composer require ${COMPOSER_EXTENSIONS}
+    run_composer require ${COMPOSER_EXTENSIONS} --update-no-dev
   fi
 }
 
@@ -114,7 +110,7 @@ case "$1" in
     SELF_IP_ADDRESS=$(grep $HOSTNAME /etc/hosts | cut -f1)
 
     echo -e "${COLOR_GREEN}######"
-    echo -e "sysPass environment installed and configured. Please point your browser to http://${SELF_IP_ADDRESS} to start the installation"
+    echo -e "sysPass environment installed and configured. Please point your browser to https://${SELF_IP_ADDRESS} to start the installation"
     echo -e "######${COLOR_NC}"
     echo -e "${COLOR_YELLOW}entrypoint: Starting Apache${COLOR_NC}"
 
