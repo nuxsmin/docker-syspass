@@ -1,7 +1,7 @@
-# Usage:
-# docker run -d --name=sysPass -p 80:80 -p 443:443 nuxsmin/docker-syspass:3.0-php7.1
-# webroot: /var/www/html/
-# Apache2 config: /etc/apache2/
+#
+# https://syspass.org
+# https://doc.syspass.org
+#
 
 FROM composer:1.7 as bootstrap
 
@@ -48,9 +48,9 @@ ENV APACHE_RUN_USER="www-data" \
 
 WORKDIR /var/www/html
 
-LABEL build=19280401
+LABEL build=19042801
 
-# Mininal HTTP-only Apache config
+# Custom sysPass Apache config with SSL by default
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
 
 # Xdebug module config
@@ -66,8 +66,10 @@ RUN chmod 755 /usr/local/sbin/entrypoint.sh \
   && ln -sf /dev/stdout ${APACHE_LOG_DIR}/access.log \
   && ln -sf /dev/stderr ${APACHE_LOG_DIR}/error.log
 
+# sysPass dependencies
 COPY --from=bootstrap /app/sysPass/ ${SYSPASS_DIR}/
 
+# Composer binary
 COPY --from=bootstrap /usr/bin/composer /usr/bin/
 
 EXPOSE 80 443
