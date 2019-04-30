@@ -2,7 +2,7 @@ version: '2'
 services:
   app:
     container_name: syspass-app
-    image: syspass/syspass:3.1.0-rc1-dev
+    image: syspass/syspass:3.1.0-rc2-dev
     restart: always
     ports:
       - "80"

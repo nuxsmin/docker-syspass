@@ -2,8 +2,8 @@
 
 BUILDS=`find ../ -type d -name sysPass-*`
 BRANCH="master"
-VERSION="3.1.0-rc1"
-BUILD_NUMBER="19042801"
+VERSION="3.1.0-rc2"
+BUILD_NUMBER="19043001"
 
 build_env() {
   for BUILD in ${BUILDS}; do
@@ -19,7 +19,7 @@ build_env() {
   done
 
   find ../ -name docker-compose.yml | while read FILE; do
-    sed -i 's/syspass:[0-9\.]\+(-[\w-]+)?/syspass:'${VERSION}'/' ${FILE}
+    sed -i 's/syspass:[0-9\.]\+\(-rc[0-9]\+\)\?/syspass:'${VERSION}'/' ${FILE}
   done
 }
 
