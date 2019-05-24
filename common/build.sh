@@ -2,8 +2,8 @@
 
 BUILDS=`find ../ -type d -name sysPass-*`
 BRANCH="master"
-VERSION="3.1.0-rc2"
-BUILD_NUMBER="19043001"
+VERSION="3.1.0-rc3"
+BUILD_NUMBER="19052501"
 
 build_env() {
   for BUILD in ${BUILDS}; do
