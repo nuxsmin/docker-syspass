@@ -19,7 +19,7 @@ RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git 
 
 FROM php:7.1-apache-stretch as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.1.0-rc4 php=7.1
+LABEL maintainer=nuxsmin@syspass.org version=3.1.0-rc5 php=7.1
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -48,7 +48,7 @@ ENV APACHE_RUN_USER="www-data" \
 
 WORKDIR /var/www/html
 
-LABEL build=19052503
+LABEL build=19072001
 
 # Custom sysPass Apache config with SSL by default
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
