@@ -12,6 +12,8 @@ services:
     volumes:
       - syspass-config:/var/www/html/sysPass/app/config
       - syspass-backup:/var/www/html/sysPass/app/backup
+    environment:
+      - USE_SSL=yes
   db:
     container_name: syspass-db
     restart: always
