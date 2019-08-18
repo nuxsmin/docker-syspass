@@ -8,7 +8,7 @@ See more at https://syspass.org
 
 ## 3.1 release
 
-These images are based on Debian 9 (Stretch), Apache 2.4 webserver with PHP 7.[1-3] module and MariaDB 10.1
+These images are based on Debian 9 (Stretch), Apache 2.4 webserver with PHP 7.[1-3] module and MariaDB 10.2
 
 ---
 
