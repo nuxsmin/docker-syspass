@@ -2,7 +2,7 @@ version: '2'
 services:
   app:
     container_name: syspass-app
-    image: syspass/syspass:3.1.0-php7.2
+    image: syspass/syspass:3.1.1-php7.2
     restart: always
     ports:
       - "80"
