@@ -8,8 +8,7 @@ setup_apache () {
   fi
 
   echo -e "${COLOR_YELLOW}setup_apache: Setting up xdebug variables${COLOR_NC}"
-  sed -i 's/__XDEBUG_REMOTE_HOST__/'"$XDEBUG_REMOTE_HOST"'/' /etc/php/7.0/apache2/conf.d/20-xdebug.ini
-  sed -i 's/__XDEBUG_IDE_KEY__/'"$XDEBUG_IDE_KEY"'/' /etc/php/7.0/apache2/conf.d/20-xdebug.ini
+  sed -i 's/__XDEBUG_REMOTE_HOST__/'"$XDEBUG_REMOTE_HOST"'/; s/__XDEBUG_IDE_KEY__/'"$XDEBUG_IDE_KEY"'/' /etc/php/7.0/apache2/conf.d/20-xdebug.ini
 }
 
 run_apache () {
