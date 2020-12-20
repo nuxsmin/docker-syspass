@@ -3,7 +3,7 @@ BUILD_NUMBER=20122001
 
 build_vendor:
 	cd build \
-	&& ./build_vendor.sh \
+	&& ./build-vendor.sh \
 	&& cd ..
 
 build_version:
