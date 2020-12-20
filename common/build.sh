@@ -1,9 +1,14 @@
 #!/bin/bash
 
+set -euo pipefail
+
 BUILDS=`find ../ -type d -name sysPass-*`
-BRANCH="master"
-VERSION="3.1.2"
-BUILD_NUMBER="19030701"
+BRANCH="${VERSION:=master}"
+
+if [ -z "${VERSION}" ] || [ -z ${BUILD_NUMBER} ]; then
+  echo "ERROR: VERSION and BUILD_NUMBER must be set"
+  exit 1
+fi
 
 build_env() {
   for BUILD in ${BUILDS}; do
@@ -11,7 +16,7 @@ build_env() {
 
     echo "Building env for ${TAG} (${BUILD})"
 
-    cp -af entrypoint.sh syspass.conf ${BUILD}/
+    cp -af entrypoint.sh syspass.conf common_fn.sh ${BUILD}/
 
     sed -i 's/SYSPASS_BRANCH="[a-z0-9\.]\+"/SYSPASS_BRANCH="'${BRANCH}'"/i;
             s/version=[a-z0-9\.\-]\+/version='${VERSION}'/i;
