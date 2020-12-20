@@ -8,7 +8,7 @@ See more at https://syspass.org
 
 ## 3.1 release
 
-These images are based on Debian 9 (Stretch), Apache 2.4 webserver with PHP 7.[1-3] module and MariaDB 10.2
+These images are based on Debian 10 (Buster), Apache 2.4 webserver with PHP 7.[3-4] module and MariaDB 10.2
 
 ---
 
@@ -35,7 +35,7 @@ $ docker-compose -p syspassdev up -d
 or pull it:
 
 ```
-$ docker run --name sysPass-app-devel syspass/syspass:3.1.x-dev
+$ docker run --name sysPass-app-devel syspass/syspass:3.2.x-dev
 ```
 
 Please be aware that you will need to setup a database if you choose to build the sysPass-only container.
