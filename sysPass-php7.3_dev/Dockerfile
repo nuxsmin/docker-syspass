@@ -2,46 +2,51 @@
 # https://syspass.org
 # https://doc.syspass.org
 #
-FROM composer:1.7 as bootstrap
+FROM composer:1.10 as bootstrap
 
-ENV SYSPASS_BRANCH="master"
+ENV SYSPASS_BRANCH="3.2.0"
 
-RUN git clone --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
+RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
   && composer install \
     --ignore-platform-reqs \
     --no-interaction \
     --no-plugins \
     --no-scripts \
     --prefer-dist \
-    --no-dev \
-    --classmap-authoritative \
+    --optimize-autoloader \
     --working-dir /app/sysPass
 
-FROM debian:stretch as app
+FROM debian:buster as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.1.2 php=7.0 environment=production
+LABEL maintainer=nuxsmin@syspass.org version=3.2.0 php=7.3 environment=debug
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     locales \
+    locales-all \
     apache2 \
-    libapache2-mod-php7.0 \
+    libapache2-mod-php7.3 \
     php-pear \
-    php7.0 \
-    php7.0-cgi \
-    php7.0-cli \
-    php7.0-common \
-    php7.0-fpm \
-    php7.0-gd \
-    php7.0-json \
-    php7.0-mysql \
-    php7.0-readline \
-    php7.0-curl \
-    php7.0-intl \
-    php7.0-ldap \
-    php7.0-mcrypt \
-    php7.0-xml \
-    php7.0-mbstring \
+    php7.3 \
+    php7.3-cgi \
+    php7.3-cli \
+    php7.3-common \
+    php7.3-curl \
+    php7.3-fpm \
+    php7.3-gd \
+    php7.3-intl \
+    php7.3-json \
+    php7.3-mbstring \
+    php7.3-mysql \
+    php7.3-opcache \
+    php7.3-readline \
+    php7.3-ldap \
+    php7.3-xdebug \
+    php7.3-xml \
+    php7.3-zip \
+    git \
+    gosu \
+    unzip \
     git \
     gosu \
     unzip \
@@ -54,23 +59,27 @@ ENV APACHE_RUN_USER="www-data" \
     APACHE_LOCK_DIR="/var/lock/apache2" \
     APACHE_PID_FILE="/var/run/apache2.pid" \
     SYSPASS_DIR="/var/www/html/sysPass" \
-    SYSPASS_UID=9001
+    SYSPASS_UID=9001 \
+    SYSPASS_DEV=0
 
 WORKDIR /var/www/html
 
-LABEL build=19030701
+LABEL build=20122001
 
 # Custom sysPass Apache config with SSL by default
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
 
+# Xdebug module config
+COPY 20-xdebug.ini /etc/php/7.3/apache2/conf.d/20-xdebug.ini
+
 # Custom entrypoint
-COPY entrypoint.sh init-functions /usr/local/sbin/
+COPY entrypoint.sh common_fn.sh /usr/local/sbin/
 
 RUN chmod 755 /usr/local/sbin/entrypoint.sh \
   && a2dissite 000-default default-ssl \
   && a2ensite syspass \
   && a2enmod proxy_fcgi setenvif ssl rewrite \
-  && a2enconf php7.0-fpm \
+  && a2enconf php7.3-fpm \
   && ln -sf /dev/stdout ${APACHE_LOG_DIR}/access.log \
   && ln -sf /dev/stderr ${APACHE_LOG_DIR}/error.log
 
