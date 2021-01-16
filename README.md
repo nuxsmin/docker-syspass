@@ -6,7 +6,7 @@ See more at https://syspass.org
 
 **No compilation stuff done**
 
-## 3.1 release
+## 3.2 release
 
 These images are based on Debian 10 (Buster), Apache 2.4 webserver with PHP 7.[3-4] module and MariaDB 10.2
 
