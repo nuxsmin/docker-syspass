@@ -6,7 +6,7 @@
 : ${COMPOSER_EXTENSIONS:=}
 : ${DEBUG:=0}
 
-if [ ${DEBUG} -eq 1 ]; then
+if [ ${DEBUG} -eq 1 -o ${SYSPASS_DEV} -eq 1 ]; then
   set -x
 fi
 
@@ -28,6 +28,11 @@ setup_apache () {
   fi
 
   echo -e "${COLOR_YELLOW}setup_apache: Setting up xdebug variables${COLOR_NC}"
+
+  if [ ! -e ${PHP_XDEBUG_FILE} ]; then
+    echo -e "${COLOR_RED}setup_apache: Xdebug's file not found (${PHP_XDEBUG_FILE})${COLOR_NC}"
+    return 0
+  fi
 
   sed -i 's/__XDEBUG_REMOTE_HOST__/'"$XDEBUG_REMOTE_HOST"'/;
   s/__XDEBUG_IDE_KEY__/'"$XDEBUG_IDE_KEY"'/' \
@@ -117,6 +122,6 @@ setup_composer_extensions () {
   if [ -n "${COMPOSER_EXTENSIONS}" ]; then
     echo -e "${COLOR_YELLOW}setup_composer_extensions: ${COMPOSER_EXTENSIONS}${COLOR_NC}"
 
-    run_composer require ${COMPOSER_EXTENSIONS} --update-no-dev
+    run_composer require ${COMPOSER_EXTENSIONS}
   fi
 }

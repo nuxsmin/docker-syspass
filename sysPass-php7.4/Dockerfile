@@ -3,7 +3,7 @@
 # https://doc.syspass.org
 #
 
-FROM composer:1.10 as bootstrap
+FROM composer:2.0 as bootstrap
 
 ENV SYSPASS_BRANCH="3.2.1"
 
@@ -46,7 +46,8 @@ RUN pecl install xdebug-2.9.8 \
 ENV APACHE_RUN_USER="www-data" \
     SYSPASS_DIR="/var/www/html/sysPass" \
     SYSPASS_UID=9001 \
-    SYSPASS_DEV=0
+    SYSPASS_DEV=0 \
+    PHP_XDEBUG_FILE="/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
 
 WORKDIR /var/www/html
 
@@ -56,7 +57,7 @@ LABEL build=21011601
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
 
 # Xdebug module config
-COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY xdebug.ini ${PHP_XDEBUG_FILE}
 
 # Custom entrypoint
 COPY entrypoint.sh common_fn.sh /usr/local/sbin/

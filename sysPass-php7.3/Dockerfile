@@ -2,7 +2,7 @@
 # https://syspass.org
 # https://doc.syspass.org
 #
-FROM composer:1.10 as bootstrap
+FROM composer:2.0 as bootstrap
 
 ENV SYSPASS_BRANCH="3.2.1"
 
