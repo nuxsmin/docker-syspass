@@ -2,9 +2,9 @@
 # https://syspass.org
 # https://doc.syspass.org
 #
-FROM composer:1.10 as bootstrap
+FROM composer:2.0 as bootstrap
 
-ENV SYSPASS_BRANCH="3.2.1"
+ENV SYSPASS_BRANCH="3.2.2"
 
 RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
   && composer install \
@@ -18,7 +18,7 @@ RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sy
 
 FROM debian:buster as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.2.1 php=7.3 environment=debug
+LABEL maintainer=nuxsmin@syspass.org version=3.2.2 php=7.3 environment=debug
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -60,17 +60,18 @@ ENV APACHE_RUN_USER="www-data" \
     APACHE_PID_FILE="/var/run/apache2.pid" \
     SYSPASS_DIR="/var/www/html/sysPass" \
     SYSPASS_UID=9001 \
-    SYSPASS_DEV=0
+    SYSPASS_DEV=1 \
+    PHP_XDEBUG_FILE="/etc/php/7.3/apache2/conf.d/20-xdebug.ini"
 
 WORKDIR /var/www/html
 
-LABEL build=21011601
+LABEL build=21031301
 
 # Custom sysPass Apache config with SSL by default
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
 
 # Xdebug module config
-COPY 20-xdebug.ini /etc/php/7.3/apache2/conf.d/20-xdebug.ini
+COPY 20-xdebug.ini ${PHP_XDEBUG_FILE}
 
 # Custom entrypoint
 COPY entrypoint.sh common_fn.sh /usr/local/sbin/
