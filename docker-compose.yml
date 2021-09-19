@@ -29,6 +29,8 @@ services:
 
   db:
     image: mariadb:10.2
+    volumes: 
+      - syspass-db:/var/lib/mysql
     environment: 
       - MYSQL_ROOT_PASSWORD=syspass
       - MYSQL_ROOT=% 
