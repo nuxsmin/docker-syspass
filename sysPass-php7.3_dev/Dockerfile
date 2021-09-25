@@ -6,7 +6,7 @@ FROM composer:2.0 as bootstrap
 
 ENV SYSPASS_BRANCH="3.2.2"
 
-RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
+RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/Fernand0S/sysPass.git \
   && composer install \
     --ignore-platform-reqs \
     --no-interaction \
@@ -18,7 +18,7 @@ RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sy
 
 FROM debian:buster as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.2.2 php=7.3 environment=debug
+LABEL maintainer=a.fernando@hotmail.com.br version=3.2.2 php=7.3 environment=debug
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install \
