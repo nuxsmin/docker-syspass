@@ -1,6 +1,6 @@
 FROM composer:2.0 as bootstrap
 
-ENV SYSPASS_BRANCH="3.2.2"
+ENV SYSPASS_BRANCH="3.2.3"
 
 RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/Fernand0S/sysPass.git \
   && composer install \
