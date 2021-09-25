@@ -15,7 +15,7 @@ RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/Fernand0S/
 
 FROM debian:buster as app
 
-LABEL maintainer=a.fernando@hotmil.com.br version=3.2.2 php=7.3 environment=production
+LABEL maintainer=a.fernando@hotmail.com.br version=3.2.2 php=7.3 environment=production
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install \
