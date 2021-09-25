@@ -4,7 +4,7 @@
 #
 
 APP_DIR="$(pwd)/app"
-SYSPASS_REPO="https://github.com/nuxsmin/sysPass.git"
+SYSPASS_REPO="https://github.com/Fernand0S/sysPass.git"
 COMPOSER_OPTS="--ignore-platform-reqs --no-interaction --no-plugins --no-scripts --prefer-dist --no-dev --optimize-autoloader --classmap-authoritative --working-dir"
 COMPOSER_IMAGE="composer:1.8"
 VENDOR_PACKAGE="vendor.tar.gz"
