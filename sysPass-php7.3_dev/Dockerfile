@@ -4,7 +4,7 @@
 #
 FROM composer:2.0 as bootstrap
 
-ENV SYSPASS_BRANCH="3.2.2"
+ENV SYSPASS_BRANCH="3.2.3"
 
 RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/Fernand0S/sysPass.git \
   && composer install \
@@ -65,7 +65,7 @@ ENV APACHE_RUN_USER="www-data" \
 
 WORKDIR /var/www/html
 
-LABEL build=21031301
+LABEL build=25092021
 
 # Custom sysPass Apache config with SSL by default
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
