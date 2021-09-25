@@ -2,7 +2,7 @@ version: '2'
 services:
   app:
     container_name: syspass-app
-    image: lincenegra/syspass:3.2.2
+    image: lincenegra/syspass:3.2.3
     restart: always
     ports:
       - "80"
