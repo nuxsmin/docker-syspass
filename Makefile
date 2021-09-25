@@ -1,5 +1,5 @@
 VERSION=3.2.2
-BUILD_NUMBER=21031301
+BUILD_NUMBER=25092021
 
 build_vendor:
 	cd build \
