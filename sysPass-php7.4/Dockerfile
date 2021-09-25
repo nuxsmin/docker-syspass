@@ -1,13 +1,8 @@
-#
-# https://syspass.org
-# https://doc.syspass.org
-#
-
 FROM composer:2.0 as bootstrap
 
 ENV SYSPASS_BRANCH="3.2.2"
 
-RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
+RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/Fernand0S/sysPass.git \
   && composer install \
     --ignore-platform-reqs \
     --no-interaction \
@@ -19,7 +14,7 @@ RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sy
 
 FROM php:7.4-apache-buster as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.2.2 php=7.4
+LABEL maintainer=a.fernando@hotmail.com.br version=3.2.2 php=7.4
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -34,6 +29,7 @@ RUN apt-get update \
     libjpeg62-turbo-dev \
     libpng-dev \
     unzip \
+    vim \
     ssl-cert \
 	&& apt-get clean \
 	&& rm -r /var/lib/apt/lists/*
@@ -51,7 +47,7 @@ ENV APACHE_RUN_USER="www-data" \
 
 WORKDIR /var/www/html
 
-LABEL build=21031301
+LABEL build=25092021
 
 # Custom sysPass Apache config with SSL by default
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
