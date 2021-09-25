@@ -1,4 +1,4 @@
-VERSION=3.2.2
+VERSION=3.2.3
 BUILD_NUMBER=25092021
 
 build_vendor:
