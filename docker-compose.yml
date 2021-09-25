@@ -1,47 +1,24 @@
-version: "3.7"
-
-networks:
-  net:
-    driver: overlay
-    attachable: true
-
+version: '2'
 services:
   app:
-    image: syspass/syspass:3.2.2
-    volumes:
-      - syspass-config:/var/www/html/sysPass/app/config
-      - syspass-backup:/var/www/html/sysPass/app/backup
-    environment:
-    - USE_SSL=yes
-    - COMPOSER_EXTENSIONS=syspass/plugin-authenticator:^v2.2
+    container_name: syspass-app
+    image: lincengra/syspass:3.2.2-php7.3
+    restart: always
     ports:
       - "80"
       - "443"
-    deploy:
-      restart_policy:
-        condition: on-failure
-      resources:
-         limits:
-          cpus: "1"
-          memory: 256M
-    networks:
-      - net
-
+    links:
+      - db
+    volumes:
+      - /var/www/html/sysPass/app/config
+      - /var/www/html/sysPass/app/backup
   db:
+    container_name: syspass-db
+    restart: always
     image: mariadb:10.2
-    volumes: 
-      - syspass-db:/var/lib/mysql
-    environment: 
+    environment:
       - MYSQL_ROOT_PASSWORD=syspass
-      - MYSQL_ROOT=% 
-    command: --default-authentication-plugin=mysql_native_password
-    deploy:
-      restart_policy:
-        condition: on-failure
-      resources:
-         limits:
-          cpus: "1"
-          memory: 256M
-    networks:
-      - net
-    
+    ports:
+      - "3306"
+    volumes:
+      - /var/lib/mysql
