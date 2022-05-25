@@ -23,7 +23,7 @@ build_env() {
             s/build=[0-9]\+/build='${BUILD_NUMBER}'/' ${BUILD}/Dockerfile
   done
 
-  find ../ -name docker-compose.yml | while read FILE; do
+  find ../ -name 'docker-compose.yml' | while read FILE; do
     sed -i 's/syspass:[0-9\.]\+\(-rc[0-9]\+\)\?/syspass:'${VERSION}'/' ${FILE}
   done
 }
