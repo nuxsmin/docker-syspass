@@ -2,8 +2,9 @@
 
 set -euo pipefail
 
-BUILDS=`find ../ -type d -name sysPass-*`
+BUILDS=$(find ../ -type d -name sysPass-*)
 BRANCH="${VERSION:=master}"
+DEFAULT="sysPass-php7.3"
 
 if [ -z "${VERSION}" ] || [ -z ${BUILD_NUMBER} ]; then
   echo "ERROR: VERSION and BUILD_NUMBER must be set"
@@ -30,11 +31,28 @@ build_env() {
 
 build_docker() {
   for BUILD in ${BUILDS}; do
-    TAG="${VERSION}-`echo ${BUILD} | cut -d'-' -f2`"
+    NAME=$(basename ${BUILD})
+    TAG="${VERSION}-$(echo ${BUILD} | cut -d'-' -f2)"
 
     echo "Building Docker for ${TAG} (${BUILD})"
 
     docker build --tag syspass:${TAG} ${BUILD}
+
+    if [[ "${NAME}" == "${DEFAULT}" ]]; then
+      docker tag syspass:${TAG} syspass/syspass:latest
+      docker tag syspass:${TAG} syspass/syspass:${VERSION}
+
+      docker push syspass/syspass:latest
+      docker push syspass/syspass:${VERSION}
+    elif [[ "${NAME}" == "${DEFAULT}_dev" ]]; then
+      docker tag syspass:${TAG} syspass/syspass:${VERSION}-dev
+
+      docker push syspass/syspass:${VERSION}-dev
+    else
+      docker tag syspass:${TAG} syspass/syspass:${TAG}
+
+      docker push syspass/syspass:${TAG}
+    fi
   done
 
   echo "Cleaning up Docker images (dangling)"
