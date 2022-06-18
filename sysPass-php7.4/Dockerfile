@@ -5,7 +5,7 @@
 
 FROM composer:2.0 as bootstrap
 
-ENV SYSPASS_BRANCH="3.2.7"
+ENV SYSPASS_BRANCH="3.2.8"
 
 RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
   && composer install \
@@ -19,7 +19,7 @@ RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sy
 
 FROM php:7.4-apache-buster as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.2.7 php=7.4
+LABEL maintainer=nuxsmin@syspass.org version=3.2.8 php=7.4
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -51,7 +51,7 @@ ENV APACHE_RUN_USER="www-data" \
 
 WORKDIR /var/www/html
 
-LABEL build=22061801
+LABEL build=22061802
 
 # Custom sysPass Apache config with SSL by default
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
