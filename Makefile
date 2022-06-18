@@ -1,11 +1,16 @@
-VERSION=3.2.2
-BUILD_NUMBER=21031301
+VERSION=3.2.8
+BUILD_NUMBER=22061802
 
+.PHONY: all
+all: build_docker build_vendor
+
+.PHONY: build_vendor
 build_vendor:
 	cd build \
 	&& ./build-vendor.sh \
 	&& cd ..
 
+.PHONY: build_version
 build_version:
 	cd common \
 	&& VERSION=${VERSION} \
@@ -13,7 +18,8 @@ build_version:
 	./build.sh env \
 	&& cd ..
 
-build_docker:
+.PHONY: build_docker
+build_docker: build_version
 	cd common \
 	&& VERSION=${VERSION} \
 	BUILD_NUMBER=${BUILD_NUMBER} \
