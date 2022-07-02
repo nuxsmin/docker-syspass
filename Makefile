@@ -1,5 +1,5 @@
-VERSION=3.2.9
-BUILD_NUMBER=22062501
+VERSION=3.2.10
+BUILD_NUMBER=22070101
 
 .PHONY: all
 all: build_docker build_vendor
