@@ -4,7 +4,7 @@
 #
 FROM composer:2.0 as bootstrap
 
-ENV SYSPASS_BRANCH="3.2.10"
+ENV SYSPASS_BRANCH="3.2.11"
 
 RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sysPass.git \
   && composer install \
@@ -18,7 +18,7 @@ RUN git clone --depth 1 --branch ${SYSPASS_BRANCH} https://github.com/nuxsmin/sy
 
 FROM debian:buster as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.2.10 php=7.3 environment=debug
+LABEL maintainer=nuxsmin@syspass.org version=3.2.11 php=7.3 environment=debug
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -65,7 +65,7 @@ ENV APACHE_RUN_USER="www-data" \
 
 WORKDIR /var/www/html
 
-LABEL build=22070101
+LABEL build=22070201
 
 # Custom sysPass Apache config with SSL by default
 COPY ["syspass.conf", "/etc/apache2/sites-available/"]
